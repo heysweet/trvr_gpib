@@ -143,27 +143,26 @@ if __name__ == '__main__':
 
         freq = MIN_FREQ        
 
-        while freq <= MAX_FREQ:
-            queryACLevel(ser, freq)
-            time.sleep(1)
-            results = getACLevelAndDistortion(ser, freq)
+        timestr = time.strftime("%Y_%m_%d_%H%M%S")
+        filename = 'amp_sweep_%s' % timestr
 
-            (acLevel, distortion) = results.split()[:2]
+        with open(filename + '.csv', 'wb') as csvfile:
+            writer = csv.writer(csvfile, delimiter=' ',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
-            print "freq: %d hz, ac Level: %s, distortion: %s" % (freq, acLevel, distortion)
-            
-            freq += stepLog(freq)
+            writer.writerow(['Frequency', 'AC Level', 'Distortion'])
 
-        # timestr = time.strftime("%Y_%m_%d_%H%M%S")
-        # filename = 'amp_sweep_%s' % timestr
+            while freq <= MAX_FREQ:
+                queryACLevel(ser, freq)
+                time.sleep(1)
+                results = getACLevelAndDistortion(ser, freq)
 
-        # with open(filename + '.csv', 'wb') as csvfile:
-        #     writer = csv.writer(csvfile, delimiter=' ',
-        #                         quotechar='|', quoting=csv.QUOTE_MINIMAL)
+                (acLevel, distortion) = results.split()[:2]
 
-        #     writer.writerow(['Frequency', 'AC Level', 'Distortion'])
-
-        #     writer.writerow([freq, acLevel, distortion])
+                writer.writerow([freq, acLevel, distortion])
+                print "freq: %d hz, ac Level: %s, distortion: %s" % (freq, acLevel, distortion)
+                
+                freq += stepLog(freq)
 
         resetToLocalControl(ser)
 
