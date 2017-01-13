@@ -92,7 +92,7 @@ def buildFreqMessage(freq, isAC):
 
 def resetToLocalControl(ser):
     print "Resetting to local control."
-    ser.write("GTL\n")
+    ser.write("DCL\n")
     time.sleep(1.1)
     ser.write("IFC\n")
 
@@ -128,9 +128,6 @@ if __name__ == '__main__':
     else:
         COM_PORT = sys.argv[1];
         GPIB_ADDRESS = sys.argv[2];
-
-    comport = COM_PORT
-    addr = GPIB_ADDRESS
     
     ser = serial.Serial()
 
@@ -139,7 +136,8 @@ if __name__ == '__main__':
     try:
         success = True
         
-        ser = serial.Serial( comport, 9600, timeout=0.5 )
+        # TODO: GPIB_ADDRESS is unused?!?
+        ser = serial.Serial( COM_PORT, 9600, timeout=0.5 )
 
         freq = MIN_FREQ        
 
